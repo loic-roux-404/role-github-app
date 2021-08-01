@@ -1,0 +1,12 @@
+---
+
+- name: 'Check mandatory variables are defined'
+  assert:
+    that:
+      - (github_app_url | d(False)) != False
+      - (github_app_name | d(False)) != False
+      - (github_api_token | d(False)) != False
+
+- include: github_app.yml
+  when:
+    - github_app_server_enable

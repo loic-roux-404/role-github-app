@@ -1,0 +1,32 @@
+---
+- name: Template profile and service file
+  ansible.builtin.template:
+    src: "create-app/index.html.j2"
+    dest: "~/create-app/"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0640
+
+- name: Create app from manifest
+  ansible.builtin.shell:
+    chdir: "~/create-app/"
+    cmd: "{{ gh_app_server_command }}"
+
+- pause:
+   prompt: "What is the code you fetched from the form submission ?"
+  register: gh_app_form_res_code
+  delegate_to: localhost
+
+- name: Finalize app
+  ansible.builtin.uri:
+    url: "{{ github_api }}/app-manifests/{{ hostvars['localhost'].gh_app_form_res_code.user_input }}/conversions"
+    headers:
+      Authorization: " token {{ github_api_token }}"
+      Accept: "application/vnd.github.v3+json"
+    body_format: json,
+    status_code: 201, 422
+  register: gh_app_infos_res
+
+- name: Kill server
+  ansible.builtin.shell:
+    cmd: "kill $(ps aux | grep '{{ gh_app_server_command }}' | awk '{print $2}')"

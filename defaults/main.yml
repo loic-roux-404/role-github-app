@@ -1,0 +1,39 @@
+---
+################
+# base config
+################
+github_api: https://api.github.com
+github_site: https://github.com
+
+github_app_server_enable: False
+github_app_url: ~
+github_app_name: ~
+github_api_token: ~
+################
+# default gh app
+################
+github_app_manifest:
+  name: "{{ github_app_name }}"
+  url: "{{ github_app_url }}"
+  hook_attributes:
+    url: "{{ github_app_url }}/webhook"
+  redirect_url: "{{ github_app_url }}/redirect"
+  callback_urls: ["{{ github_app_url }}/callback"]
+  public: True
+  default_permissions:
+    actions: write
+    checks: write
+    contents: write
+    deployments: write
+    discussions: write
+    environments: write
+    metadata: read
+    pull_request: write
+    webhooks: write
+    commit_statuses: write
+    email_addresses: read
+  default_events:
+    - push
+    - pull_request
+
+gh_app_server_command: python3 -m http.server --cgi 2000 &>/dev/null

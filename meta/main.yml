@@ -1,0 +1,21 @@
+galaxy_info:
+  author: Loic Roux
+  description: Set up a github app creation server
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+        - focal
+    - name: Debian
+      versions:
+        - buster
+  galaxy_tags:
+    - http
+    - app
+    - docker
+    - traefik
+    - "heroku like"
+dependencies: []
